@@ -19,9 +19,14 @@ const pool = new Pool({
 // Test the connection on startup
 pool.connect((err, client, release) => {
   if (err) {
-    console.error('❌ Database connection failed:', err.message);
+    console.error('Database connection failed:', err.message);
   } else {
-    console.log('✅ Connected to PostgreSQL');
+    console.log('Connected to PostgreSQL');
     release();
+    // why release? because we are just testing the connection, 
+    // we don't need to keep it open. 
+    // releasing it allows other parts of the application to use the connection pool without running into issues of too many open connections.
   }
 });
+
+module.exports = pool;
