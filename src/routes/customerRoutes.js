@@ -20,6 +20,6 @@ router.get('/',     getAllCustomers);
 router.get('/:id',  getCustomerById);
 router.post('/',    createCustomerRules, validate, createCustomer);
 router.put('/:id',  updateCustomerRules, validate, updateCustomer);
-// router.delete('/:id', deleteCustomer);
+router.delete('/:id', deleteCustomer);
 
 module.exports = router;

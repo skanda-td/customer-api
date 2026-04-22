@@ -100,9 +100,34 @@ const updateCustomer = async (req, res) => {
   }
 };
 
+// ─── DELETE /customers/:id ────────────────────────────────────────
+// Deletes a customer by ID
+const deleteCustomer = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(
+      'DELETE FROM customers WHERE id = $1 RETURNING *',
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Customer not found' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Customer "${result.rows[0].name}" deleted`,
+    });
+  } catch (err) {
+    console.error('deleteCustomer error:', err.message);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
 module.exports = {
   getAllCustomers,
   getCustomerById,
   createCustomer,
-  updateCustomer
+  updateCustomer,
+  deleteCustomer
 };
