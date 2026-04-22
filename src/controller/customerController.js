@@ -39,7 +39,31 @@ const getCustomerById = async (req, res) => {
   }
 };
 
+// ─── POST /customers ──────────────────────────────────────────────
+// Creates a new customer
+const createCustomer = async (req, res) => {
+  const { name, email, phone, city } = req.body;
+  try {
+    const result = await pool.query(
+      `INSERT INTO customers (name, email, phone, city)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [name, email, phone || null, city || null]
+    );
+
+    res.status(201).json({ success: true, data: result.rows[0] });
+  } catch (err) {
+    // PostgreSQL unique constraint violation = duplicate email
+    if (err.code === '23505') {
+      return res.status(409).json({ success: false, message: 'Email already exists' });
+    }
+    console.error('createCustomer error:', err.message);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
 module.exports = {
   getAllCustomers,
-  getCustomerById
+  getCustomerById,
+  createCustomer
 };
