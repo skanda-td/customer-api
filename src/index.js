@@ -4,6 +4,9 @@ const dotenv  = require('dotenv');
 const logger          = require('./middleware/logger');
 const customerRoutes  = require('./routes/customerRoutes');
 
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
+
 dotenv.config();
 
 const app  = express();
@@ -22,6 +25,9 @@ app.get('/', (req, res) => {
   res.json({ success: true, message: 'Customer API is running' });
 });
 
+// ─── Swagger UI ──────────────────────────────────────────────────
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // ─── 404 Handler ──────────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });
@@ -37,6 +43,7 @@ app.use((err, req, res, next) => {
 // ─── Start Server ─────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+  console.log("Swagger docs on http://localhost:3000/api-docs");
 });
 
 // TODO: Proper status codes.
