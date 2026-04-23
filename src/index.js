@@ -46,4 +46,4 @@ app.listen(PORT, () => {
   console.log("Swagger docs on http://localhost:3000/api-docs");
 });
 
-// TODO: Proper status codes.
+// TODO: Proper status codes. Swagger .yaml conversion.
